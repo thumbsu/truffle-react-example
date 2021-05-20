@@ -48,33 +48,34 @@ const Count = () => {
 
     setDirection("plus");
 
+    // TODO event emitter 처리
     countContract.methods
       .plus()
       .send({
         from: walletInstance.address,
-        gas: "1000"
+        gas: "200000"
       })
-      .once("transactionHash", txHash => {
-        console.log(`
-          Sending a transaction... (Call contract's function 'plus')
-          txHash: ${txHash}
-          `);
-      })
-      .once("receipt", receipt => {
-        console.log(
-          `
-          Received receipt! It means your transaction(calling plus function)
-          is in klaytn block(#${receipt.blockNumber})
-        `,
-          receipt
-        );
-        setDirection(null);
-        setTxHash(receipt.transactionHash);
-      })
-      .once("error", error => {
-        alert(error.message);
-        setDirection(null);
-      });
+      // .on("transactionHash", txHash => {
+      //   console.log(`
+      //     Sending a transaction... (Call contract's function 'plus')
+      //     txHash: ${txHash}
+      //     `);
+      // })
+      // .on("receipt", receipt => {
+      //   console.log(
+      //     `
+      //     Received receipt! It means your transaction(calling plus function)
+      //     is in klaytn block(#${receipt.blockNumber})
+      //   `,
+      //     receipt
+      //   );
+      //   setDirection(null);
+      //   setTxHash(receipt.transactionHash);
+      // })
+      // .on("error", error => {
+      //   alert(error.message);
+      //   setDirection(null);
+      // });
   }, [countContract.methods]);
 
   const setMinus = useCallback(() => {
@@ -87,29 +88,29 @@ const Count = () => {
       .minus()
       .send({
         from: walletInstance.address,
-        gas: "1000"
+        gas: "200000"
       })
-      .once("transactionHash", txHash => {
-        console.log(`
-          Sending a transaction... (Call contract's function 'minus')
-          txHash: ${txHash}
-          `);
-      })
-      .once("receipt", receipt => {
-        console.log(
-          `
-          Received receipt which means your transaction(calling minus function)
-          is in klaytn block(#${receipt.blockNumber})
-        `,
-          receipt
-        );
-        setDirection(null);
-        setTxHash(receipt.transactionHash);
-      })
-      .once("error", error => {
-        alert(error.message);
-        setDirection(null);
-      });
+      // .on("transactionHash", txHash => {
+      //   console.log(`
+      //   Sending a transaction... (Call contract's function 'minus')
+      //   txHash: ${txHash}
+      //   `);
+      // })
+      // .on("receipt", receipt => {
+      //   console.log(
+      //     `
+      //   Received receipt which means your transaction(calling minus function)
+      //   is in klaytn block(#${receipt.blockNumber})
+      // `,
+      //     receipt
+      //   );
+      //   setDirection(null);
+      //   setTxHash(receipt.transactionHash);
+      // })
+      // .on("error", error => {
+      //   alert(error.message);
+      //   setDirection(null);
+      // });
   }, [countContract.methods]);
 
   useEffect(() => {
