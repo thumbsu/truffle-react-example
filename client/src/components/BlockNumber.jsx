@@ -1,5 +1,5 @@
-import { cav } from "../klaytn/caver";
 import { useCallback, useEffect, useRef, useState } from "react";
+import caver from "../klaytn/caver";
 import "./BlockNumber.scss";
 
 const BlockNumber = () => {
@@ -7,7 +7,7 @@ const BlockNumber = () => {
   const [currentBlockNumber, setCurrentBlockNumber] = useState("");
 
   const getBlockNumber = useCallback(async () => {
-    const blockNumber = await Caver.klay.getBlockNumber();
+    const blockNumber = await caver.klay.getBlockNumber();
     setCurrentBlockNumber(blockNumber);
   }, []);
 

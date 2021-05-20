@@ -1,6 +1,6 @@
-import caver from "../klaytn/caver";
-import { cx } from "classnames";
+import cx from "classnames";
 import { useCallback, useState } from "react";
+import caver from "../klaytn/caver";
 import "./Auth.scss";
 
 const Auth = () => {
@@ -62,9 +62,8 @@ const Auth = () => {
     }
 
     try {
-      const {
-        privateKey: privateKeyFromKeystore
-      } = caver.klay.accounts.decrypt(keystore, password);
+      const { privateKey: privateKeyFromKeystore } =
+        caver.klay.accounts.decrypt(keystore, password);
       integrateWallet(privateKeyFromKeystore);
     } catch (e) {
       setKeystoreMsg("Password doesn't match");
@@ -99,20 +98,20 @@ const Auth = () => {
 
     if (walletInstance) {
       return (
-        <Fragment>
+        <>
           <label className="Auth__label">Integrated: </label>
           <p className="Auth__address">{walletInstance.address}</p>
           <button className="Auth__logout" onClick={removeWallet}>
             Logout
           </button>
-        </Fragment>
+        </>
       );
     }
 
     return (
-      <Fragment>
+      <>
         {accessType === "keystore" ? (
-          <Fragment>
+          <>
             <div className="Auth__keystore">
               <p className="Auth__label" htmlFor="keystore">
                 Keystore:
@@ -141,16 +140,16 @@ const Auth = () => {
               type="password"
               onChange={e => setPassword(e.target.value)}
             />
-          </Fragment>
+          </>
         ) : (
-          <Fragment>
+          <>
             <label className="Auth__label">Private Key:</label>
             <input
               className="Auth__input"
               name="privateKey"
               onChange={e => setPrivateKey(e.target.value)}
             />
-          </Fragment>
+          </>
         )}
         <button className="Auth__button" onClick={handleLogin}>
           Login
@@ -161,12 +160,17 @@ const Auth = () => {
             ? "Want to login with keystore? (click)"
             : "Want to login with privatekey? (click)"}
         </p>
-      </Fragment>
+      </>
     );
   };
 
   return (
-    <div className={cx("Auth", { "Auth--active": !!keystore })}>
+    <div
+      className={cx("Auth", {
+        // If keystore file is imported, Adds a 'Auth--active' classname.
+        "Auth--active": !!keystore
+      })}
+    >
       <div className="Auth__flag" />
       <div className="Auth__content">{renderAuth()}</div>
     </div>
