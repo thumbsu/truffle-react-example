@@ -15,7 +15,7 @@ const Count = () => {
       DEPLOYED_ABI: process.env.DEPLOYED_ABI,
       DEPLOYED_ADDRESS: process.env.DEPLOYED_ADDRESS
     };
-  }, [process.env]);
+  }, []);
   const countContract = useMemo(() => {
     if (DEPLOYED_ABI && DEPLOYED_ADDRESS) {
       return new caver.klay.Contract(
@@ -27,7 +27,6 @@ const Count = () => {
 
   const [count, setCount] = useState("");
   const [lastParticipant, setLastParticipant] = useState("");
-  const [isSetting, setIsSetting] = useState(false);
   const [direction, setDirection] = useState(null);
   const [txHash, setTxHash] = useState("");
 
@@ -40,7 +39,7 @@ const Count = () => {
       .call();
     setCount(count);
     setLastParticipant(lastParticipant);
-  }, []);
+  }, [countContract.methods]);
 
   const setPlus = useCallback(() => {
     const walletInstance =
@@ -76,7 +75,7 @@ const Count = () => {
         alert(error.message);
         setDirection(null);
       });
-  }, []);
+  }, [countContract.methods]);
 
   const setMinus = useCallback(() => {
     const walletInstance =
@@ -111,13 +110,13 @@ const Count = () => {
         alert(error.message);
         setDirection(null);
       });
-  }, []);
+  }, [countContract.methods]);
 
   useEffect(() => {
     intervalId.current = setInterval(getCount, 1000);
 
     return () => clearInterval(intervalId.current);
-  }, []);
+  }, [getCount]);
 
   return (
     <div className="Count">
@@ -151,6 +150,7 @@ const Count = () => {
           </p>
           <a
             target="_blank"
+            rel="noreferrer"
             href={`https://scope.klaytn.com/transaction/${txHash}`}
             className="Count__lastTransactionLink"
           >

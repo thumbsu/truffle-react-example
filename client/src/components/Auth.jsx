@@ -12,10 +12,22 @@ const Auth = () => {
   const [privateKey, setPrivateKey] = useState("");
 
   const reset = useCallback(() => {
-    this.setKeystore("");
-    this.setKeystoreMsg("");
-    this.setPassword("");
-    this.setPrivateKey("");
+    setKeystore("");
+    setKeystoreMsg("");
+    setPassword("");
+    setPrivateKey("");
+  }, []);
+
+  const checkValidKeystore = useCallback(keystore => {
+    const parsedKeystore = JSON.parse(keystore);
+
+    const isValidKeystore =
+      parsedKeystore.version &&
+      parsedKeystore.id &&
+      parsedKeystore.address &&
+      parsedKeystore.crypto;
+
+    return isValidKeystore;
   }, []);
 
   const handleImport = useCallback(
@@ -40,20 +52,19 @@ const Auth = () => {
 
       fileReader.readAsText(keystore);
     },
-    [setKeystoreMsg, setKeystore, setKeystoreName]
+    [setKeystoreMsg, setKeystore, setKeystoreName, checkValidKeystore]
   );
 
-  const checkValidKeystore = useCallback(keystore => {
-    const parsedKeystore = JSON.parse(keystore);
-
-    const isValidKeystore =
-      parsedKeystore.version &&
-      parsedKeystore.id &&
-      parsedKeystore.address &&
-      parsedKeystore.crypto;
-
-    return isValidKeystore;
-  }, []);
+  const integrateWallet = useCallback(
+    privateKey => {
+      const walletInstance =
+        caver.klay.accounts.privateKeyToAccount(privateKey);
+      caver.klay.accounts.wallet.add(walletInstance);
+      sessionStorage.setItem("walletInstance", JSON.stringify(walletInstance));
+      reset();
+    },
+    [reset]
+  );
 
   const handleLogin = useCallback(() => {
     if (accessType === "privateKey") {
@@ -68,7 +79,14 @@ const Auth = () => {
     } catch (e) {
       setKeystoreMsg("Password doesn't match");
     }
-  }, [privateKey, setKeystoreMsg]);
+  }, [
+    privateKey,
+    setKeystoreMsg,
+    accessType,
+    keystore,
+    integrateWallet,
+    password
+  ]);
 
   const getWallet = useCallback(() => {
     if (caver.klay.accounts.wallet.length) {
@@ -76,18 +94,11 @@ const Auth = () => {
     }
   }, []);
 
-  const integrateWallet = useCallback(privateKey => {
-    const walletInstance = caver.klay.accounts.privateKeyToAccount(privateKey);
-    caver.klay.accounts.wallet.add(walletInstance);
-    sessionStorage.setItem("walletInstance", JSON.stringify(walletInstance));
-    reset();
-  }, []);
-
   const removeWallet = useCallback(() => {
     caver.klay.accounts.wallet.clear();
     sessionStorage.removeItem("walletInstance");
     reset();
-  }, []);
+  }, [reset]);
 
   const toggleAccessType = useCallback(() => {
     setAccessType(accessType === "privateKey" ? "keystore" : "privateKey");

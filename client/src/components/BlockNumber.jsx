@@ -17,7 +17,7 @@ const BlockNumber = () => {
     return () => {
       if (timer.current) clearInterval(timer.current);
     };
-  }, []);
+  }, [getBlockNumber]);
 
   return (
     <div className="BlockNumber">
